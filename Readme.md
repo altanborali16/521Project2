@@ -12,7 +12,7 @@ Run => python manage.py runserver
 
 
 Basically to start it each time
-To active env run => env\Scripts\activate.bat 
+To active env run => env\Scripts\activate.bat (Also no need just checked)
 Run => python manage.py runserver
 
 
