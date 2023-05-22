@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Numbers</title>
+</head>
+<body>
+    {% if arr %}
+        <ul>
+            {% for x in arr %}
+                <li>The number at index {{ x.index}} is {{x.number}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>no arr is available</p>
+    {% endif %}
+</body>
+</html>
