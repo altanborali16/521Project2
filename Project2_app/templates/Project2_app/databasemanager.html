@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Database Manager</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row" style="justify-content: center">
+            <p>Hello databasemanager {{username}}</p>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h1>AUDIENCES</h1>
+            <form class="form-group" method="POST" action="{% url 'databasemanager' %}">
+				{{add_audience_form}}
+                {% csrf_token %}
+				<button type="submit" style="margin-top: 10px;"class="btn btn-success">Add</button>	
+			</form> 
+            <form class="form-group" method="POST" action="{% url 'databasemanager' %}">
+				{{delete_audience_form}}
+                {% csrf_token %}
+				<button type="submit" style="margin-top: 10px;"class="btn btn-danger">Delete</button>	
+			</form> 
+            
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.surname}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">View</button>
+                            <!-- <button type="button" onclick="EditUser()" class="btn btn-success">Edit</i></button>
+                            <button type="button" onclick="DeleteUser('{{user.username}}')" class="btn btn-danger">Delete</i></button> -->
+                        </td>
+                      </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h1>DIRECTORS</h1>
+              <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Director Username</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Surname</th>
+                      <th scope="col">Nation</th>
+                      <th scope="col">Platform Id</th>
+                      <!-- <th scope="col">Actions</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for director in directors %}
+                        {% for user in users %}
+                            {% if director.director_username == user.username %}
+                                <tr>
+                                    <td>{{ director.director_username }}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.surname}}</td>
+                                    <td>{{director.nation}}</td>
+                                    <td>{{director.platform_id}}</td>
+                                    <!-- <td>
+                                        <button type="button" class="btn btn-primary">View</button>
+                                        <button type="button" class="btn btn-success">Edit</i></button>
+                                        <button type="button" class="btn btn-danger">Delete</i></button>
+                                    </td> -->
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                  </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+          <div class="col-4">
+            One of three columns
+          </div>
+          <div class="col-2">
+            One of three columns
+          </div>
+        </div>
+      </div>
+</body>
+</html> 
+
+<script>
+    function DeleteUser(username) {
+        console.log(username)
+        window.location.reload();
+    };
+    function EditUser() {
+        console.log("basıldı----------------")
+        // window.location.reload();
+    };
+</script>

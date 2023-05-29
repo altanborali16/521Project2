@@ -1,22 +1,13 @@
 import pyodbc
 from Project2_app.dbConnection import *
 
-def checkCreditentials(name, surname):
-    # conn_str = (
-    # 'DRIVER={ODBC Driver 17 for SQL Server};'
-    # 'SERVER=localhost;'
-    # 'DATABASE=MovieDB;'
-    # 'Trusted_Connection=yes;'
-    # )
-    # db = pyodbc.connect(conn_str)
-    # cnn = db.cursor()
-    # cnn.execute('SELECT * FROM USERS')
-    # users = cnn.fetchall()
-    # for i in users:
-    #     print(i)
-    # db.close()
+def checkCreditentials(username, password):
     GetUsers()
-    CheckUserExist(name,surname)
-    if((name == "oyku" and surname == "yilmaz") or (name == "selen" and surname == "parlar")):
-        return True
-    return False 
+    return CheckUserExist(username,password)
+    
+    # if(user['Name'] != None and user['Name'] != '' and user['Name'] != []):
+    #     return True
+    # return False
+    # if((user.name == "oyku" and surname == "yilmaz") or (name == "selen" and surname == "parlar")):
+    #     return True
+    # return False 

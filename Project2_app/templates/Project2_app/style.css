@@ -1,0 +1,13 @@
+
+h4 {
+    margin: 2rem 0rem 1rem;
+  }
+.container {
+    padding: 2rem 0rem;
+  }
+.table-image td {
+      vertical-align: middle;
+}
+.table-image th {
+    vertical-align: middle;
+}

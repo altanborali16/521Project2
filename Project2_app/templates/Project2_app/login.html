@@ -16,7 +16,7 @@
 			{% if login_fail%}
 				<div class="alert alert-danger" role="alert">
 					<h4 class="alert-heading">Login Failed</h4>
-					<p>Your name or surname is not correct</p>
+					<p>Your username or password is not correct</p>
 				</div>
 			{% endif %}
 			<form class="form-group" method="POST" novalidate action="{% url 'login' %}">

@@ -15,13 +15,14 @@ Run => python manage.py runserver
 
 
 Basically to start it each time
-To active env run => env\Scripts\activate.bat (Also no need just checked)
+To active env run => env\Scripts\activate.bat
 Run => python manage.py runserver
 
 
 Last written code on min 18
 
 Run => pip3 install django-crispy-forms
+Run => pip install pandas
 
 
 
