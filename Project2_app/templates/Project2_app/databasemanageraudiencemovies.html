@@ -12,10 +12,10 @@
   </head>
   <body>
     <div class="container">
-      <div class="row" style="justify-content: center">
-        <p>Hello databasemanager {{username}}</p>
-      </div>
-      <div class="row">
+      <div
+        class="row"
+        style="justify-content: center; margin-top: 50px; text-align: center"
+      >
         <div class="col-4">
           <a href="{% url 'databasemanagerAudiences' %}" class="btn btn-primary"
             >Audiences</a
@@ -23,18 +23,38 @@
         </div>
         <div class="col-4">
           <a href="{% url 'databasemanagerDirectors' %}" class="btn btn-primary"
-          >Directors</a
-        >
+            >Directors</a
+          >
         </div>
         <div class="col-4">
           <a href="{% url 'databaseManagerMovies' %}" class="btn btn-primary"
-          >Movies</a
-        >
+            >Movies</a
+          >
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          
+          <h1>Movie Rates of {{username}}</h1>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Movie Id</th>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for movie in movies %}
+              <tr>
+                <td>{{movie.audience_username }}</td>
+                <td>{{movie.movie_id}}</td>
+                <td>{{movie.movie_name}}</td>
+                <td>{{movie.rating}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

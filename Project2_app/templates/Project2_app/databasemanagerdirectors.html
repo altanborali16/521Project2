@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Database Manager</title>
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div
+      class="row"
+      style="justify-content: center; margin-top: 50px; text-align: center"
+    >
+      <div class="col-6">
+        <a href="{% url 'databasemanagerAudiences' %}" class="btn btn-primary"
+          >Audiences</a
+        >
+      </div>
+      <!-- <div class="col-4">
+          <a href="{% url 'databasemanagerDirectors' %}" class="btn btn-primary"
+          >Directors</a
+        >
+        </div> -->
+      <div class="col-6">
+        <a href="{% url 'databaseManagerMovies' %}" class="btn btn-primary"
+          >Movies</a
+        >
+      </div>
+    </div>
+    <div class="row" style="margin: 5%">
+      <div class="col-12">
+        <h1>DIRECTORS</h1>
+        <form
+          class="form-group"
+          method="POST"
+          action="{% url 'databasemanagerAddDirector' %}"
+        >
+          {{add_director_form}} {% csrf_token %}
+          <button
+            type="submit"
+            style="margin-top: 10px"
+            class="btn btn-success"
+          >
+            Add
+          </button>
+        </form>
+        <form
+            class="form-group"
+            method="POST"
+            action="{% url 'databasemanagerUpdateDirector' %}"
+          >
+            {{update_director_form}} {% csrf_token %}
+            <button
+              type="submit"
+              style="margin-top: 10px"
+              class="btn btn-success"
+            >
+              Update
+            </button>
+          </form>
+        <form
+          class="form-group"
+          method="POST"
+          action="{% url 'databasemanagerDirectorMovies' %}"
+        >
+          {{show_movies_director_form}} {% csrf_token %}
+          <button type="submit" style="margin-top: 10px" class="btn btn-primary">
+            Show Director Movies
+          </button>
+        </form>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Director Username</th>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
+              <th scope="col">Nation</th>
+              <th scope="col">Platform Id</th>
+              <!-- <th scope="col">Actions</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            {% for director in directors %}
+            <tr>
+              <td>{{ director.director_username }}</td>
+              <td>{{director.name}}</td>
+              <td>{{director.surname}}</td>
+              <td>{{director.nation}}</td>
+              <td>{{director.platform_id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" style="margin: 5%">
+      <div class="col-12">
+        <h1>PLATFORMS</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Platform Id</th>
+              <th scope="col">Platform Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for platform in platforms %}
+            <tr>
+              <td>{{ platform.platform_id }}</td>
+              <td>{{platform.platform_name}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

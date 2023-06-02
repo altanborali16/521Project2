@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Database Manager</title>
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div
+        class="row"
+        style="justify-content: center; margin-top: 50px; text-align: center"
+      >
+        <!-- <div class="col-4">
+          <a href="{% url 'databasemanagerAudiences' %}" class="btn btn-primary"
+            >Audiences</a
+          >
+        </div> -->
+        <div class="col-6">
+          <a href="{% url 'databasemanagerDirectors' %}" class="btn btn-primary"
+            >Directors</a
+          >
+        </div>
+        <div class="col-6">
+          <a href="{% url 'databaseManagerMovies' %}" class="btn btn-primary"
+            >Movies</a
+          >
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h1>AUDIENCES</h1>
+          <form
+            class="form-group"
+            method="POST"
+            action="{% url 'databasemanagerAddAudience' %}"
+          >
+            {{add_audience_form}} {% csrf_token %}
+            <button
+              type="submit"
+              style="margin-top: 10px"
+              class="btn btn-success"
+            >
+              Add
+            </button>
+          </form>
+          <form
+            class="form-group"
+            method="POST"
+            action="{% url 'databasemanagerDeleteAudience' %}"
+          >
+            {{delete_audience_form}} {% csrf_token %}
+            <button
+              type="submit"
+              style="margin-top: 10px"
+              class="btn btn-danger"
+            >
+              Delete
+            </button>
+          </form>
+          <form
+            class="form-group"
+            method="POST"
+            action="{% url 'databasemanagerAudienceMovies' %}"
+          >
+            {{show_movies_audience_form}} {% csrf_token %}
+            <button
+              type="submit"
+              style="margin-top: 10px"
+              class="btn btn-primary"
+            >
+              Show Movies
+            </button>
+          </form>
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for audience in audiences %}
+              <tr>
+                <td>{{audience.username }}</td>
+                <td>{{audience.name}}</td>
+                <td>{{audience.surname}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

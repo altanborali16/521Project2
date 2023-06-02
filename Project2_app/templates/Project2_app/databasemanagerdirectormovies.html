@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Database Manager</title>
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div
+      class="row"
+      style="justify-content: center; margin-top: 50px; text-align: center"
+    >
+      <div class="col-4">
+        <a href="{% url 'databasemanagerAudiences' %}" class="btn btn-primary"
+          >Audiences</a
+        >
+      </div>
+      <div class="col-4">
+          <a href="{% url 'databasemanagerDirectors' %}" class="btn btn-primary"
+          >Directors</a
+        >
+        </div>
+      <div class="col-4">
+        <a href="{% url 'databaseManagerMovies' %}" class="btn btn-primary"
+          >Movies</a
+        >
+      </div>
+    </div>
+    <div class="row" style="margin: 5%">
+      <div class="col-12">
+        <h1>Movies of {{username}}</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Movie Id</th>
+              <th scope="col">Movie Name</th>
+              <th scope="col">Theatre Id</th>
+              <th scope="col">Theatre Name</th>
+              <th scope="col">Time Slot</th>
+              <th scope="col">District</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for directormovie in directormovies %}
+            <tr>
+              <td>{{ directormovie.movie_id }}</td>
+              <td>{{directormovie.movie_name}}</td>
+              <td>{{directormovie.theatre_id}}</td>
+              <td>{{ directormovie.theatre_name }}</td>
+              <td>{{directormovie.time_slot}}</td>
+              <td>{{directormovie.district}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

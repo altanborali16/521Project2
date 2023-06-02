@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Database Manager</title>
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div
+      class="row"
+      style="justify-content: center; margin-top: 50px; text-align: center"
+    >
+      <div class="col-6">
+        <a href="{% url 'databasemanagerAudiences' %}" class="btn btn-primary"
+          >Audiences</a
+        >
+      </div>
+      <div class="col-6">
+          <a href="{% url 'databasemanagerDirectors' %}" class="btn btn-primary"
+          >Directors</a
+        >
+        </div>
+      <!-- <div class="col-6">
+        <a href="{% url 'databaseManagerMovies' %}" class="btn btn-primary"
+          >Movies</a
+        >
+      </div> -->
+    </div>
+    <div class="row" style="margin: 5%">
+      <div class="col-12">
+        <h1>Movies</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Movie Id</th>
+              <th scope="col">Movie Name</th>
+              <th scope="col">Overall Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for movieWithRate in moviesWithRate %}
+            <tr>
+              <td>{{ movieWithRate.movie_id }}</td>
+              <td>{{movieWithRate.movie_name}}</td>
+              <td>{{movieWithRate.overall_rating}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

@@ -52,11 +52,11 @@ def home(request):
     return render(request, 'Project2_app/home.html', {"username":username})
 
 def databasemanager(request):
-    if(len(request.POST) == 5):
-        databasemanagerAddAudience(request)
-    if(len(request.POST) == 2):
-        databasemanagerDeleteAudience(request)
-    print("Buraya giriyor mu")
+    # if(len(request.POST) == 5):
+    #     databasemanagerAddAudience(request)
+    # if(len(request.POST) == 2):
+    #     databasemanagerDeleteAudience(request)
+    # print("Buraya giriyor mu")
     if('username' in request.session):
         username = request.session['username']
     else: 
@@ -64,9 +64,17 @@ def databasemanager(request):
     username = request.session['username']
     if(username == None):
         return redirect('../login/')
-    users = GetUsers()
+    # users = GetUsers()
     directors = GetDirectors()
-    return render(request, 'Project2_app/databasemanager.html', {"username":username , "users" : users, "directors": directors, "add_audience_form" : AddAudienceForm(),"delete_audience_form" : DeleteAudienceForm()} )
+    return render(request, 'Project2_app/databasemanager.html', {"username":username } )
+
+def databasemanagerAudiences(request):
+    if('username' in request.session):
+        username = request.session['username']
+    else: 
+        return redirect('../login/')
+    audiences = GetAudiences()
+    return render(request, 'Project2_app/databasemanageraudiences.html', {"username":username , "audiences" : audiences, "add_audience_form" : AddAudienceForm(),"delete_audience_form" : DeleteAudienceForm(), "show_movies_audience_form": ShowMoviesOfAudiencefrom()} )
 
 def databasemanagerAddAudience(request):
     username = request.POST.get("username")
@@ -76,12 +84,70 @@ def databasemanagerAddAudience(request):
     print("Will be adding user : " ,username,password,name,surname)
     AddUser(username,password,name,surname)
     AddAudience(username)
+    audiences = GetAudiences()
     print("Added user : " ,username,password,name,surname)
+    return redirect('databasemanagerAudiences')
+    # return render(request, 'Project2_app/databasemanageraudiences.html', {"username":username , "audiences" : audiences, "add_audience_form" : AddAudienceForm(),"delete_audience_form" : DeleteAudienceForm()} )
 
 def databasemanagerDeleteAudience(request):
     username = request.POST.get("username")
     DeleteUser(username)
     print("Deleted username : ", username)
+    return redirect('databasemanagerAudiences')
+
+def databasemanagerAudienceMovies(request):
+    if('username' in request.session):
+        username = request.session['username']
+    else: 
+        return redirect('../login/')
+    username = request.POST.get("username")
+    movies = GetAudienceMovies(username)
+    print("Buraya geldik")
+    return render(request, 'Project2_app/databasemanageraudiencemovies.html', {"username":username , "movies": movies} )
+
+def databasemanagerDirectors(request):
+    if('username' in request.session):
+        username = request.session['username']
+    else: 
+        return redirect('../login/')
+    directors = GetDirectors()
+    platforms = GetPlatforms()
+    return render(request, 'Project2_app/databasemanagerdirectors.html', {"username":username , "directors": directors,"platforms" : platforms, "add_director_form" : AddDirectorForm(),"update_director_form" : UpdateDirectorForm(),"delete_director_form" : DeleteDirectorForm(), "show_movies_director_form":ShowMoviesOfDirectorForm} )
+def databasemanagerAddDirector(request):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    name = request.POST.get("name")
+    surname = request.POST.get("surname")
+    nation = request.POST.get("nation")
+    platform_id = request.POST.get("platform")
+    AddUser(username,password,name,surname)
+    AddDirector(username,nation,platform_id)
+    return redirect('databasemanagerDirectors')
+
+def databasemanagerUpdateDirector(request):
+    director_username = request.POST.get("username")
+    platform_id = request.POST.get("platform")
+    UpdateDirector(director_username,platform_id)
+    return redirect('databasemanagerDirectors')
+
+def databasemanagerDirectorMovies(request):
+    director_username = request.POST.get("username")
+    directormovies = GetDirectorMovies(director_username)
+    return render(request, 'Project2_app/databasemanagerdirectormovies.html', {"username":director_username , "directormovies": directormovies} )
+
+def databasemanagerDeleteDirector(request):
+
+    return redirect('databasemanagerDirectors')
+
+def databaseManagerMovies(request):
+    if('username' in request.session):
+        username = request.session['username']
+    else: 
+        return redirect('../login/')
+    moviesWithRate = GetMoviesWithRate()
+    return render(request, 'Project2_app/databasemanagermovies.html', {"username":username , "moviesWithRate": moviesWithRate} )
+
+
 
 def director(request):
     if('username' in request.session):
