@@ -42,3 +42,22 @@ class ShowMoviesOfDirectorForm(forms.Form):
 
 class DeleteDirectorForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}),required=True)
+
+class AddMovieForm(forms.Form):
+    # movieId = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Movie Id'}),required=True)
+    movieName = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Movie Name'}),required=True)
+    duration = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Duration'}), required=True)
+    genreID = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Genre Id'}), required=True)
+    genreID1 = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Genre Id Additional'}),required=False)
+    genreID2 = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Genre Id Additional'}),required=False)
+    genreID3 = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Genre Id Additional'}),required=False)
+
+class AddPredeccorsForm(forms.Form):
+    movieID = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Movie Id'}), required=True)
+    predeccorID = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Predeccor Id'}), required=True)
+
+class AddMovieSessionForm(forms.Form):
+    movieId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Movie Id'}), required=True)
+    theatreId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Theatre Id'}), required=True)
+    slot = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Slot'}), required=True)
+    date = forms.DateField(widget=forms.DateInput(attrs={'placeholder': 'YYYY/MM/DD'}), required=True)

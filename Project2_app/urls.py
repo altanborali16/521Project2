@@ -28,5 +28,8 @@ urlpatterns = [
     # path('databasemanager/', views.databasemanagerAddAudience, name='AddAudience'),
     # path('databasemanager/', views.databasemanagerDeleteAudience, name='DeleteAudience'),
     path('director/', views.director, name='director'),
+    path('director/addMovie', views.directorAddMovie, name='directorAddMovie'),
+    path('director/addPredeccor', views.directorAddPredeccor, name='directorAddPredeccor'),
+    path('director/addMovieSession', views.directorAddMovieSession, name='directorAddMovieSession'),
     # path('shows/<int:genre>', views.listShows, name='listshows'),
 ]

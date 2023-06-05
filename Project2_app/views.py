@@ -132,7 +132,7 @@ def databasemanagerUpdateDirector(request):
 
 def databasemanagerDirectorMovies(request):
     director_username = request.POST.get("username")
-    directormovies = GetDirectorMovies(director_username)
+    directormovies = GetDirectorMovieSessions(director_username)
     return render(request, 'Project2_app/databasemanagerdirectormovies.html', {"username":director_username , "directormovies": directormovies} )
 
 def databasemanagerDeleteDirector(request):
@@ -157,7 +157,38 @@ def director(request):
     username = request.session['username']
     if(username == None):
         return redirect('../login/')
-    return render(request, 'Project2_app/director.html', {"username":username})
+    director =  GetDirectorInformation(username)
+    directorMovies = GetDirectorMoviesWithGenre(username)
+    directorMovieSessions = GetDirectorMovieSessions(username)
+    theatres = GetTheatres()
+    return render(request, 'Project2_app/director.html', {"username":username, "director":director, "directorMovies": directorMovies, "directorMovieSessions" : directorMovieSessions,"theatres": theatres, "add_movie_form" : AddMovieForm() , "add_predeccor_form" : AddPredeccorsForm(), "add_movie_session_form": AddMovieSessionForm()})
+
+def directorAddMovie(request):
+    username = request.session['username']
+    movieName = request.POST.get("movieName")
+    duration = request.POST.get("duration")
+    genreID = request.POST.get("genreID")
+    genreID1 = request.POST.get("genreID1")
+    genreID2 = request.POST.get("genreID2")
+    genreID3 = request.POST.get("genreID3")
+    AddMovie(username,movieName,duration,genreID,genreID1,genreID2,genreID3)
+    return redirect('director')
+def directorAddPredeccor(request):
+    movie_id = request.POST.get("movieID")
+    predeccors_id= request.POST.get("predeccorID")
+    AddPredeccor(movie_id, predeccors_id)
+    return redirect('director')
+def directorAddMovieSession(request):
+    movie_id = request.POST.get("movieId")
+    theatre_id = request.POST.get("theatreId")
+    slot = request.POST.get("slot")
+    date = request.POST.get("date")
+    print("Date :" , date)
+    AddMovieSession(movie_id,theatre_id,slot,date)
+
+    return redirect('director')
+
+
 
 
 # def listShows(request, genre):
