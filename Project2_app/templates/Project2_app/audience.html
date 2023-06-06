@@ -137,6 +137,7 @@
               <thead>
                 <tr>
                   <th scope="col">Session Id</th>
+                  <th scope="col">Status</th>
                   <th scope="col">Platform Name</th>
                   <th scope="col">Platform Id</th>
                   <th scope="col">Movie Name</th>
@@ -156,6 +157,7 @@
                 {% for platformSession in platformSessions %}
                 <tr>
                   <td>{{platformSession.session_id }}</td>
+                  <td>{{platformSession.status }}</td>
                   <td>{{platformSession.platform_name}}</td>
                   <td>{{platformSession.platform_id }}</td>
                   <td>{{platformSession.movie_name}}</td>

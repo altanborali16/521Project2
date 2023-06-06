@@ -25,16 +25,6 @@ def login(request):
     context = {"login_fail": True, "login_form":LoginForm()}    
     return render(request, 'Project2_app/login.html', context)
 
-def home(request):
-    if('username' in request.session):
-        username = request.session['username']
-    else: 
-        return redirect('../login/')
-    username = request.session['username']
-    if(username == None):
-        return redirect('../login/')
-    return render(request, 'Project2_app/home.html', {"username":username})
-
 def databasemanager(request):
     if('username' in request.session):
         username = request.session['username']

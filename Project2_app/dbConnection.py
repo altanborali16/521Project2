@@ -392,6 +392,10 @@ def GetAudiencePlatformSessions(username):
                 directorMovieSession['predeccors'] = ''
                 directorMovieSession['overall_rating'] = ''
                 directorMovieSession['director_name'] = directorAsUser[0]['name'] + " " + directorAsUser[0]['surname']
+                if(directorMovieSession['date']  < date.today()):
+                    directorMovieSession['status'] = 'Passed'
+                else :
+                    directorMovieSession['status'] = 'Buy ticket'
                 for directorMovieWithGenre in directorMoviesWithGenre:
                     if (directorMovieWithGenre['movie_id'] == directorMovieSession['movie_id']):
                         directorMovieSession['genre'] = directorMovieWithGenre['genre']
