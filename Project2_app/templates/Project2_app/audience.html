@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Audience</title>
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="row" style="margin: 5%">
+      <div class="col-12">
+        <div class="row" style="display: flex; justify-content: center">
+          <h1>Hello audience {{username}}!</h1>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h1>Platforms of {{username}}</h1>
+            <form
+              class="form-group"
+              method="POST"
+              action="{% url 'audienceAddPlatform' %}"
+            >
+              {{add_audience_platform_form}} {% csrf_token %}
+              <button
+                type="submit"
+                style="margin-top: 10px"
+                class="btn btn-success"
+              >
+                Add Platform
+              </button>
+            </form>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Platform Id</th>
+                  <th scope="col">Platform Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for audiencePlatform in audiencePlatforms %}
+                <tr>
+                  <td>{{audiencePlatform.platform_id }}</td>
+                  <td>{{audiencePlatform.platform_name}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <h1>Movie Ratings of {{username}}</h1>
+              <form
+                class="form-group"
+                method="POST"
+                action="{% url 'audienceAddMovieRating' %}"
+              >
+                {{add_movie_rating_form}} {% csrf_token %}
+                <button
+                  type="submit"
+                  style="margin-top: 10px"
+                  class="btn btn-success"
+                >
+                  Add Rate
+                </button>
+              </form>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Movie Id</th>
+                    <th scope="col">Movie Name</th>
+                    <th scope="col">Given Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for watchedMovieSession in watchedMovieSessions %}
+                  <tr>
+                    <td>{{watchedMovieSession.movie_id }}</td>
+                    <td>{{watchedMovieSession.movie_name}}</td>
+                    <td>{{watchedMovieSession.rate}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <div class="row" style="margin-top: 5%">
+          <div class="col-12">
+            <h1>Bought Movie Sessions of {{username}}</h1>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Session Id</th>
+                  <th scope="col">Theatre Id</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Theatre Name</th>
+                  <th scope="col">Movie Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for boughtMovieSession in boughtMovieSessions %}
+                <tr>
+                  <td>{{boughtMovieSession.session_id}}</td>
+                  <td>{{boughtMovieSession.theatre_id }}</td>
+                  <td>{{boughtMovieSession.date }}</td>
+                  <td>{{boughtMovieSession.theatre_name}}</td>
+                  <td>{{boughtMovieSession.movie_name }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 5%">
+          <div class="col-12">
+            <h1>Possible Movie Sessions of {{username}}</h1>
+            <p>*Subscribed platforms sessions</p>
+            <form
+              class="form-group"
+              method="POST"
+              action="{% url 'audienceAddSession' %}"
+            >
+              {{add_audience_session_form}} {% csrf_token %}
+              <button
+                type="submit"
+                style="margin-top: 10px"
+                class="btn btn-success"
+              >
+                Add Session
+              </button>
+            </form>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Session Id</th>
+                  <th scope="col">Platform Name</th>
+                  <th scope="col">Platform Id</th>
+                  <th scope="col">Movie Name</th>
+                  <th scope="col">Movie Id</th>
+                  <th scope="col">Director</th>
+                  <th scope="col">Genre</th>
+                  <th scope="col">Predeccors</th>
+                  <th scope="col">Rate</th>
+                  <th scope="col">Theatre Id</th>
+                  <th scope="col">Theatre Name</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time Slot</th>
+                  <th scope="col">District</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for platformSession in platformSessions %}
+                <tr>
+                  <td>{{platformSession.session_id }}</td>
+                  <td>{{platformSession.platform_name}}</td>
+                  <td>{{platformSession.platform_id }}</td>
+                  <td>{{platformSession.movie_name}}</td>
+                  <td>{{platformSession.movie_id }}</td>
+                  <td>{{platformSession.director_name}}</td>
+                  <td>{{platformSession.genre }}</td>
+                  <td>{{platformSession.predeccors}}</td>
+                  <td>{{platformSession.overall_rating }}</td>
+                  <td>{{platformSession.theatre_id}}</td>
+                  <td>{{platformSession.theatre_name }}</td>
+                  <td>{{platformSession.date}}</td>
+                  <td>{{platformSession.time_slot}}</td>
+                  <td>{{platformSession.district}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 5%">
+          <div class="col-12">
+            <h1>Non Subscribed Platform's Movie Sessions</h1>
+            <p>*You need to subscribe Platform to buy session</p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Platform Name</th>
+                  <th scope="col">Platform Id</th>
+                  <th scope="col">Movie Name</th>
+                  <th scope="col">Movie Id</th>
+                  <th scope="col">Director</th>
+                  <th scope="col">Genre</th>
+                  <th scope="col">Predeccors</th>
+                  <th scope="col">Rate</th>
+                  <th scope="col">Theatre Id</th>
+                  <th scope="col">Theatre Name</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time Slot</th>
+                  <th scope="col">District</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for platformSession in otherPlatformSessions %}
+                <tr>
+                  <td>{{platformSession.platform_name}}</td>
+                  <td>{{platformSession.platform_id }}</td>
+                  <td>{{platformSession.movie_name}}</td>
+                  <td>{{platformSession.movie_id }}</td>
+                  <td>{{platformSession.director_name}}</td>
+                  <td>{{platformSession.genre }}</td>
+                  <td>{{platformSession.predeccors}}</td>
+                  <td>{{platformSession.overall_rating }}</td>
+                  <td>{{platformSession.theatre_id}}</td>
+                  <td>{{platformSession.theatre_name }}</td>
+                  <td>{{platformSession.date}}</td>
+                  <td>{{platformSession.time_slot}}</td>
+                  <td>{{platformSession.district}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

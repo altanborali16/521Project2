@@ -61,3 +61,13 @@ class AddMovieSessionForm(forms.Form):
     theatreId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Theatre Id'}), required=True)
     slot = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Slot'}), required=True)
     date = forms.DateField(widget=forms.DateInput(attrs={'placeholder': 'YYYY/MM/DD'}), required=True)
+
+class AddAudiencePlatformForm(forms.Form):
+    platformId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Platform Id'}), required=True)
+
+class AddAudienceSessionForm(forms.Form):
+    sessionId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Session Id'}), required=True)
+
+class AddMovieRatingForm(forms.Form):
+    movieId = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Movie Id'}), required=True)
+    rate = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': 'Rate'}), required=True)

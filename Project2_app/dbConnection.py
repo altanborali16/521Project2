@@ -2,6 +2,7 @@ import pyodbc
 from django.db import connection
 import pandas as pd
 import json
+from datetime import date
 
 conn_str = (
     'DRIVER={ODBC Driver 17 for SQL Server};'
@@ -71,7 +72,6 @@ def GetDirectors():
             })
     
     return data
-    return directors
 
 def CheckUserExist(username,password):
     
@@ -98,6 +98,15 @@ def CheckUserDirector(username):
     # print(directors)
     # print("Directors count : ", len(directors)) 
     if(len(directors) <= 0):
+        return False
+    return True
+
+def CheckUserAudience(username):
+    query = (f"SELECT audience_username FROM Audiences WHERE audience_username ='{username}'")
+    audiences =  query_db(query)
+    # print(directors)
+    # print("Directors count : ", len(directors)) 
+    if(len(audiences) <= 0):
         return False
     return True
 
@@ -172,7 +181,7 @@ def GetMoviesWithRate():
             if movieRate['movie_id'] == movie['movie_id']:
                 rate_count += 1
                 total_rate += movieRate['rating']
-        avg = 0
+        avg = "N/A"
         if rate_count > 0 :
             avg = total_rate/rate_count
         data.append({
@@ -208,9 +217,9 @@ def GetDirectorMovieSessions(director_username):
                         'time_slot': theatresession['time_slot'],
                         'district' : theatre['district'],
                         'date' : theatresession['date'],
+                        'session_id' : session['session_id'],
                     })
     return data
-
 
 
 def AddDirector(username,nation,platform_id):
@@ -220,7 +229,6 @@ def AddDirector(username,nation,platform_id):
     cur = db.cursor()
     cur.execute(query)
     cur.commit()
-
 
 def UpdateDirector(director_username,platform_id):
     query = (f"UPDATE Directors SET platform_id = '{platform_id}' WHERE director_username = '{director_username}';")
@@ -289,7 +297,15 @@ def AddMovie(username,movieName,duration,genreID,genreID1,genreID2,genreID3):
     cur.execute(query)
     cur.commit()
     # Movie Genre add
-    genre_list = [80001, 80002, 80003, 80004,80005,80006]
+    genre_list_int = []
+    query = (f"SELECT * FROM Genres")
+    genres = query_db(query)
+    for genre in genres:
+        genre_list_int.append(genre['genre_id'])
+    # print(genre_list_int)
+    genre_list = list(map(str, genre_list_int))
+    
+    # print(genreID in genre_list)
     if genreID in genre_list:
         query1 = (f"INSERT INTO MovieGenre (movie_id, genre_id ) VALUES ('{newMovieId}', '{genreID}')")
         db = pyodbc.connect(conn_str)
@@ -314,12 +330,14 @@ def AddMovie(username,movieName,duration,genreID,genreID1,genreID2,genreID3):
         cur = db.cursor()
         cur.execute(query4)
         cur.commit()
+
 def AddPredeccor(movie_id, predeccors_id):
     query = (f"INSERT INTO MoviePredeccors (movie_id, predeccors_id ) VALUES ('{movie_id}', '{predeccors_id}')")
     db = pyodbc.connect(conn_str)
     cur = db.cursor()
     cur.execute(query)
     cur.commit()
+
 def AddMovieSession(movie_id,theatre_id,slot,date):
     query = (f"SELECT TOP 1 * FROM Sessions ORDER BY session_id DESC")
     lastSession = query_db(query)
@@ -335,6 +353,176 @@ def AddMovieSession(movie_id,theatre_id,slot,date):
     cur = db.cursor()
     cur.execute(query)
     cur.commit()
+
+def GetAudiencePlatforms(audience_username):
+    platforms = GetPlatforms()
+    # print(platforms)
+    query = (f"SELECT * FROM AudiencePlatform where audience_username ='{audience_username}'")
+    audiencePlatforms =  query_db(query)
+    for audiencePlatform in audiencePlatforms:
+        audiencePlatform['platform_name'] = ""
+        for platform in platforms:
+            if(platform['platform_id'] == audiencePlatform['platform_id']):
+                # print("Girdi", platform['platform_name'])
+                audiencePlatform['platform_name'] = platform['platform_name']
+    return audiencePlatforms
+
+def AddPlatformToAudience(audience_username,platform_id):
+    query = (f"INSERT INTO AudiencePlatform (audience_username, platform_id ) VALUES ('{audience_username}', '{platform_id}')")
+    db = pyodbc.connect(conn_str)
+    cur = db.cursor()
+    cur.execute(query)
+    cur.commit()
+
+def GetAudiencePlatformSessions(username):
+    data = []
+    audiencePlatforms = GetAudiencePlatforms(username)
+    movies = GetMoviesWithRate()
+    for audiencePlatform in audiencePlatforms:
+        platform_id =  audiencePlatform['platform_id']
+        query = (f"SELECT * FROM Directors where platform_id ='{platform_id}'")
+        directorsOfPlatform =  query_db(query)
+        for directorOfPlatform in directorsOfPlatform:
+            query = (f"SELECT * FROM Users where username ='{directorOfPlatform['director_username']}'")
+            directorAsUser = query_db(query)
+            directorMovieSessions = GetDirectorMovieSessions(directorOfPlatform['director_username'])
+            directorMoviesWithGenre =  GetDirectorMoviesWithGenre(directorOfPlatform['director_username'])
+            for directorMovieSession in directorMovieSessions:
+                directorMovieSession['genre'] = ''
+                directorMovieSession['predeccors'] = ''
+                directorMovieSession['overall_rating'] = ''
+                directorMovieSession['director_name'] = directorAsUser[0]['name'] + " " + directorAsUser[0]['surname']
+                for directorMovieWithGenre in directorMoviesWithGenre:
+                    if (directorMovieWithGenre['movie_id'] == directorMovieSession['movie_id']):
+                        directorMovieSession['genre'] = directorMovieWithGenre['genre']
+                        directorMovieSession['predeccors'] = directorMovieWithGenre['predeccors']
+                for movie in movies :
+                    if (movie['movie_id'] == directorMovieSession['movie_id']):
+                        directorMovieSession['overall_rating'] = movie['overall_rating']
+                directorMovieSession['platform_name'] = audiencePlatform['platform_name']
+                directorMovieSession['platform_id'] = audiencePlatform['platform_id']
+                data.append(directorMovieSession)
+    
+    # print("Audience Platform Sessions : ", data)
+    return data
+def GetOtherPlatformSessions(username):
+    data = []
+    audiencePlatforms = GetAudiencePlatforms(username)
+    movies = GetMoviesWithRate()
+    query = (f"SELECT * FROM Directors")
+    directorsOfPlatform =  query_db(query)
+    for directorOfPlatform in directorsOfPlatform:
+        isContinue = True
+        for audiencePlatform in audiencePlatforms:
+            if(directorOfPlatform['platform_id'] == audiencePlatform['platform_id']):
+                isContinue = False
+        if(not isContinue):
+            continue
+        query = (f"SELECT * FROM Users where username ='{directorOfPlatform['director_username']}'")
+        directorAsUser = query_db(query)
+        directorMovieSessions = GetDirectorMovieSessions(directorOfPlatform['director_username'])
+        directorMoviesWithGenre =  GetDirectorMoviesWithGenre(directorOfPlatform['director_username'])
+        for directorMovieSession in directorMovieSessions:
+            directorMovieSession['genre'] = ''
+            directorMovieSession['predeccors'] = ''
+            directorMovieSession['overall_rating'] = ''
+            directorMovieSession['director_name'] = directorAsUser[0]['name'] + " " + directorAsUser[0]['surname']
+            for directorMovieWithGenre in directorMoviesWithGenre:
+                if (directorMovieWithGenre['movie_id'] == directorMovieSession['movie_id']):
+                    directorMovieSession['genre'] = directorMovieWithGenre['genre']
+                    directorMovieSession['predeccors'] = directorMovieWithGenre['predeccors']
+            for movie in movies :
+                if (movie['movie_id'] == directorMovieSession['movie_id']):
+                    directorMovieSession['overall_rating'] = movie['overall_rating']
+            directorMovieSession['platform_id'] = directorOfPlatform['platform_id']
+            platforms = GetPlatforms()
+            for platform in platforms:
+                if(platform['platform_id'] == directorOfPlatform['platform_id']):
+                    directorMovieSession['platform_name'] = platform['platform_name']
+            data.append(directorMovieSession)
+    
+    # print("Non Audience Platform Sessions : ", data)
+    return data
+
+def GetBoughtMovieSessions(audience_username):
+    query = (f"SELECT * FROM AudienceSessions where audience_username ='{audience_username}'")
+    audienceSessions =  query_db(query)
+    theatres = GetTheatres()
+    movies = GetMoviesWithRate()
+    data = []
+    for audienceSession in audienceSessions:
+        query = (f"SELECT * FROM TheatreSessions where session_id ='{audienceSession['session_id']}'")
+        theatreSessions =  query_db(query)
+        for theatreSession in theatreSessions:
+            for theatre in theatres:
+                if(theatreSession['theatre_id'] == theatre['theatre_id']):
+                    selectedTheatre = theatre  
+                    selectedTheatreSession = theatreSession 
+        query = (f"SELECT * FROM Sessions where session_id ='{audienceSession['session_id']}'")
+        sessions =  query_db(query)
+        for movie in movies:
+            if(sessions[0]['movie_id'] == movie['movie_id']):
+                selectedMovie = movie
+        data.append({
+            'session_id': audienceSession['session_id'],
+            'theatre_id': selectedTheatre['theatre_id'],
+            'theatre_name' : selectedTheatre['theatre_name'],
+            'movie_name' : selectedMovie['movie_name'],
+            'date' : selectedTheatreSession['date']
+        })
+    # print("Bought" ,data)
+    return data
+def AddAudienceSession(audience_username,session_id):
+    query = (f"INSERT INTO AudienceSessions (audience_username, session_id) VALUES ('{audience_username}', '{session_id}')")
+    db = pyodbc.connect(conn_str)
+    cur = db.cursor()
+    cur.execute(query)
+    cur.commit()
+
+def GetWatchedMovieSessions(audience_username):
+    query = (f"SELECT * FROM AudienceSessions where audience_username ='{audience_username}'")
+    audienceSessions =  query_db(query)
+    theatres = GetTheatres()
+    movies = GetMoviesWithRate()
+    query = (f"SELECT * FROM MovieRating where audience_username ='{audience_username}'")
+    movieRatesByAudience =  query_db(query)
+    data = []
+    for audienceSession in audienceSessions:
+        query = (f"SELECT * FROM TheatreSessions where session_id ='{audienceSession['session_id']}'")
+        theatreSessions =  query_db(query)
+        for theatreSession in theatreSessions:
+            for theatre in theatres:
+                if(theatreSession['theatre_id'] == theatre['theatre_id']):
+                    selectedTheatre = theatre  
+                    selectedTheatreSession = theatreSession 
+        query = (f"SELECT * FROM Sessions where session_id ='{audienceSession['session_id']}'")
+        sessions =  query_db(query)
+        for movie in movies:
+            if(sessions[0]['movie_id'] == movie['movie_id']):
+                selectedMovie = movie
+        rate = "Not rated yet"
+        if(selectedTheatreSession['date'] >= date.today()):
+            rate = "Movie can rated after movie watched"
+        else:
+            for movieRateByAudience in movieRatesByAudience:
+                if(movieRateByAudience['movie_id'] == selectedMovie['movie_id']):
+                    rate = movieRateByAudience['rating']
+            
+
+        data.append({
+            'movie_name' : selectedMovie['movie_name'],
+            'movie_id' : selectedMovie['movie_id'],
+            'rate' : rate
+        })
+    return data
+
+def AddMovieRating(audience_username, movie_id,rate):
+    query = (f"INSERT INTO MovieRating (audience_username, movie_id, rating ) VALUES ('{audience_username}', '{movie_id}', '{rate}')")
+    db = pyodbc.connect(conn_str)
+    cur = db.cursor()
+    cur.execute(query)
+    cur.commit()
+
 
 
 
